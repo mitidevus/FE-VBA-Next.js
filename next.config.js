@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+    images: {
+        domains: ["api-ticket.vba.vn", "se-img.dcd-production.i.geniussports.com"],
+    },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
