@@ -1,5 +1,3 @@
-"use client";
-
 import React, { Suspense, useEffect, useState } from "react";
 import { getAllClubs } from "../api/club";
 import Image from "next/image";
@@ -11,20 +9,12 @@ interface Club {
     image: string;
 }
 
-function Clubs() {
-    const [clubs, setClubs] = useState<Club[]>([]);
-
-    useEffect(() => {
-        const fetchClubs = async () => {
-            const response = await getAllClubs({
-                id: true,
-                VBAId: true,
-                image: true,
-            });
-            setClubs(response);
-        };
-        fetchClubs();
-    }, []);
+async function Clubs() {
+    const clubs: Club[] = await getAllClubs({
+        id: true,
+        VBAId: true,
+        image: true,
+    });
 
     return (
         <div className="w-full h-full">
