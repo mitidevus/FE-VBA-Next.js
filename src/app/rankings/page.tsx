@@ -48,7 +48,6 @@ function Rankings() {
                         ],
                         order: "position ASC",
                     });
-                    console.log(rankingsResponse);
                     setRankings(rankingsResponse);
                 } else {
                     setRankings([]);

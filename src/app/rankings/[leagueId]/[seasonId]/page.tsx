@@ -1,8 +1,8 @@
 "use client";
 
-import League from "@/models/league";
-import Ranking from "@/models/ranking";
-import Season from "@/models/season";
+import { League } from "@/models/league";
+import { Ranking } from "@/models/ranking";
+import { Season } from "@/models/season";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,6 @@ function Rankings({ params }: { params: { leagueId: number; seasonId: number } }
                         ],
                         order: "position ASC",
                     });
-                    console.log(rankingsResponse);
                     setRankings(rankingsResponse);
                 } else {
                     setRankings([]);

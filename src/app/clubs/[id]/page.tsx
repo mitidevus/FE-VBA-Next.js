@@ -1,24 +1,14 @@
-"use client";
-
 import { getClubById } from "@/app/api/club";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { IoLocationOutline } from "react-icons/io5";
-import { FaGlobeAsia } from "react-icons/fa";
-import { MdOutlineAlternateEmail } from "react-icons/md";
-import { BsFillTelephoneFill } from "react-icons/bs";
 import { Club } from "@/models/club";
+import Image from "next/image";
+import { Suspense } from "react";
+import { BsFillTelephoneFill } from "react-icons/bs";
+import { FaGlobeAsia } from "react-icons/fa";
+import { IoLocationOutline } from "react-icons/io5";
+import { MdOutlineAlternateEmail } from "react-icons/md";
 
-function ClubInfo({ params }: { params: { id: string } }) {
-    const [club, setClub] = useState<Club>({} as Club);
-
-    useEffect(() => {
-        const fetchClub = async () => {
-            const response: Club = await getClubById(params.id);
-            setClub(response);
-        };
-        fetchClub();
-    }, [params.id]);
+async function ClubInfo({ params }: { params: { id: string } }) {
+    const club: Club = await getClubById(params.id);
 
     return (
         <div className="w-full h-full">

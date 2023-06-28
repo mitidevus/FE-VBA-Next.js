@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { getAllClubs } from "../api/club";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,13 +40,13 @@ function Clubs() {
                         clubs.map((club) => (
                             <div key={club.id} className="p-8">
                                 <Link href={`/clubs/${club.id}`}>
-                                <Image
-                                    className="w-full h-full rounded-full mx-auto hover:scale-110 duration-300 hover:shadow-lg hover:shadow-[#040c16]"
-                                    src={club.image}
-                                    width={350}
-                                    height={300}
-                                    alt="Club"
-                                />
+                                    <Image
+                                        className="w-full h-full rounded-full mx-auto hover:scale-110 duration-300 hover:shadow-lg hover:shadow-[#040c16]"
+                                        src={club.image}
+                                        width={350}
+                                        height={300}
+                                        alt="Club"
+                                    />
                                 </Link>
                             </div>
                         ))}

@@ -44,7 +44,6 @@ function Matches({ params }: { params: { leagueId: number; seasonId: number } })
                     ],
                     order: "date DESC",
                 });
-                console.log(matchesResponse);
                 setMatches(matchesResponse);
             } else {
                 setMatches([]);

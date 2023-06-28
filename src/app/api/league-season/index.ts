@@ -1,18 +1,12 @@
 import { LeagueSeasonParams } from "@/models/league-season";
-import { axiosPrivate } from "..";
+import { requestData } from "..";
 
 export const getLeagueSeasonByLeagueIdSeasonId = async (
     leagueId: number,
     seasonId: number,
     params?: LeagueSeasonParams
 ) => {
-    try {
-        const filter = encodeURIComponent(JSON.stringify({ fields: params }));
-        const url = `/league-seasons/${leagueId}/league/${seasonId}/season?filter=${filter}`;
-        const response = await axiosPrivate.get(url);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
+    const filter = encodeURIComponent(JSON.stringify({ fields: params }));
+    const url = `/league-seasons/${leagueId}/league/${seasonId}/season?filter=${filter}`;
+    return requestData(url);
 };
