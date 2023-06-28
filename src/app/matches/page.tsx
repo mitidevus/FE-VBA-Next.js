@@ -1,66 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getAllLeagues } from "../api/league";
-import { getAllSeasons } from "../api/season";
-import { getLeagueSeasonByLeagueIdSeasonId } from "../api/league-season";
-import { getMatchByLeagueSeasonId } from "../api/match";
+import { League } from "@/models/league";
+import { Match } from "@/models/match";
+import { Season } from "@/models/season";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-interface League {
-    id: number;
-    name: string;
-    type: string;
-}
-
-interface Season {
-    id: number;
-    name: string;
-}
-
-interface LeagueSeason {
-    id: number;
-    VBAId: number;
-    leagueId: number;
-    seasonId: number;
-}
-
-interface Club {
-    id: string;
-    VBAId: number;
-    name: string;
-    logo: string;
-    image: string;
-    address: string;
-    website: string;
-    email: string;
-    phone: string;
-    history: string;
-}
-
-interface Stadium {
-    id: string;
-    VBAId: number;
-    name: string;
-}
-
-interface Match {
-    id: string;
-    VBAId: number;
-    homeClubId: string;
-    awayClubId: string;
-    leagueSeasonId: number;
-    stadiumId: string;
-    homeScore: number;
-    awayScore: number;
-    date: string;
-    status: string;
-    homeClub: Club;
-    awayClub: Club;
-    stadium: Stadium;
-}
+import { useEffect, useState } from "react";
+import { getAllLeagues } from "../api/league";
+import { getLeagueSeasonByLeagueIdSeasonId } from "../api/league-season";
+import { getMatchByLeagueSeasonId } from "../api/match";
+import { getAllSeasons } from "../api/season";
 
 function Matches() {
     const [leagues, setLeagues] = useState<League[]>([]);

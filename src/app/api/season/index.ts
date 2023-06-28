@@ -1,9 +1,5 @@
+import { SeasonParams } from "@/models/season";
 import { axiosPrivate } from "..";
-
-interface SeasonParams {
-    id?: boolean;
-    name?: boolean;
-}
 
 export const getAllSeasons = async (params?: SeasonParams) => {
     try {

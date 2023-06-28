@@ -7,24 +7,7 @@ import { IoLocationOutline } from "react-icons/io5";
 import { FaGlobeAsia } from "react-icons/fa";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { BsFillTelephoneFill } from "react-icons/bs";
-
-interface Club {
-    id: string;
-    VBAId: number;
-    name: string;
-    logo: string;
-    image: string;
-    address: string;
-    website: string;
-    email: string;
-    phone: string;
-    history: string;
-}
-
-export const metadata = {
-    title: "123",
-    description: "Hello",
-};
+import { Club } from "@/models/club";
 
 function ClubInfo({ params }: { params: { id: string } }) {
     const [club, setClub] = useState<Club>({} as Club);

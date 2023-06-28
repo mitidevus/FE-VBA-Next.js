@@ -1,60 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getAllLeagues } from "../../../api/league";
-import { getAllSeasons } from "../../../api/season";
-import { getLeagueSeasonByLeagueIdSeasonId } from "../../../api/league-season";
+import League from "@/models/league";
+import Ranking from "@/models/ranking";
+import Season from "@/models/season";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getAllLeagues } from "../../../api/league";
+import { getLeagueSeasonByLeagueIdSeasonId } from "../../../api/league-season";
 import { getRankingByLeagueSeasonId } from "../../../api/ranking";
-
-interface League {
-    id: number;
-    name: string;
-    type: string;
-}
-
-interface Season {
-    id: number;
-    name: string;
-}
-
-interface LeagueSeason {
-    id: number;
-    VBAId: number;
-    leagueId: number;
-    seasonId: number;
-}
-
-interface Club {
-    id: string;
-    VBAId: number;
-    name: string;
-    logo: string;
-    image: string;
-    address: string;
-    website: string;
-    email: string;
-    phone: string;
-    history: string;
-}
-
-interface Ranking {
-    id: string;
-    clubId: string;
-    leagueSeasonId: number;
-    position: number;
-    gamesPlayed: number;
-    won: number;
-    lost: number;
-    percentageWon: number;
-    scoredFor: number;
-    scoredAgainst: number;
-    pointsDiff: number;
-    streak: number;
-    club: Club;
-}
+import { getAllSeasons } from "../../../api/season";
 
 function Rankings({ params }: { params: { leagueId: number; seasonId: number } }) {
     const [leagues, setLeagues] = useState<League[]>([]);

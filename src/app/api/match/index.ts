@@ -1,23 +1,5 @@
+import { MatchParams } from "@/models/match";
 import { axiosPrivate } from "..";
-
-interface MatchParams {
-    field?: {
-        id?: boolean;
-        VBAId?: boolean;
-        homeClubId?: boolean;
-        awayClubId?: boolean;
-        leagueSeasonId?: boolean;
-        stadiumId?: boolean;
-        homeScore?: boolean;
-        awayScore?: boolean;
-        date?: boolean;
-        status?: boolean;
-    };
-    include?: {
-        relation: string;
-    }[];
-    order?: string;
-}
 
 export const getMatchByLeagueSeasonId = async (leagueSeasonId: number, params?: MatchParams) => {
     try {

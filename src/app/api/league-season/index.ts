@@ -1,10 +1,5 @@
+import { LeagueSeasonParams } from "@/models/league-season";
 import { axiosPrivate } from "..";
-
-interface LeagueSeasonParams {
-    id?: boolean;
-    leagueId?: boolean;
-    seasonId?: boolean;
-}
 
 export const getLeagueSeasonByLeagueIdSeasonId = async (
     leagueId: number,

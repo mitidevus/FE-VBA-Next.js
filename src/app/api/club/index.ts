@@ -1,17 +1,5 @@
+import { ClubParams } from "@/models/club";
 import { axiosPrivate } from "..";
-
-interface ClubParams {
-    id?: boolean;
-    VBAId?: boolean;
-    name?: boolean;
-    logo?: boolean;
-    image?: boolean;
-    address?: boolean;
-    website?: boolean;
-    email?: boolean;
-    phone?: boolean;
-    history?: boolean;
-}
 
 export const getAllClubs = async (params?: ClubParams) => {
     try {

@@ -1,10 +1,5 @@
+import { LeagueParams } from "@/models/league";
 import { axiosPrivate } from "..";
-
-interface LeagueParams {
-    id?: boolean;
-    name?: boolean;
-    type?: boolean;
-}
 
 export const getAllLeagues = async (params?: LeagueParams) => {
     try {
