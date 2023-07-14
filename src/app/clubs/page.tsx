@@ -1,7 +1,6 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { getAllClubs } from "../api/club";
 import Image from "next/image";
 import Link from "next/link";
+import { getAllClubs } from "../api/club";
 
 interface Club {
     id: string;

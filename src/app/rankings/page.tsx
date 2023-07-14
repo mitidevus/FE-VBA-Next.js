@@ -11,6 +11,7 @@ import { getAllLeagues } from "../api/league";
 import { getLeagueSeasonByLeagueIdSeasonId } from "../api/league-season";
 import { getRankingByLeagueSeasonId } from "../api/ranking";
 import { getAllSeasons } from "../api/season";
+import Loading from "../loading";
 
 function Rankings() {
     const [leagues, setLeagues] = useState<League[]>([]);
@@ -18,40 +19,48 @@ function Rankings() {
     const [rankings, setRankings] = useState<Ranking[]>([]);
     const [selectedLeague, setSelectedLeague] = useState<number>(0);
     const [selectedSeason, setSelectedSeason] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
-            setLeagues(leaguesResponse);
-            setSeasons(seasonsResponse);
+            try {
+                setLoading(true);
+                const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
+                setLeagues(leaguesResponse);
+                setSeasons(seasonsResponse);
 
-            if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
-                setSelectedLeague(leaguesResponse[0].id);
-                setSelectedSeason(seasonsResponse[0].id);
+                if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
+                    setSelectedLeague(leaguesResponse[0].id);
+                    setSelectedSeason(seasonsResponse[0].id);
 
-                const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(
-                    leaguesResponse[0].id,
-                    seasonsResponse[0].id
-                );
+                    const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(
+                        leaguesResponse[0].id,
+                        seasonsResponse[0].id
+                    );
 
-                if (leagueSeasonResponse && leagueSeasonResponse.id) {
-                    const rankingsResponse = await getRankingByLeagueSeasonId(leagueSeasonResponse.id, {
-                        include: [
-                            {
-                                relation: "club",
-                                scope: {
-                                    fields: ["id", "name", "logo"],
+                    if (leagueSeasonResponse && leagueSeasonResponse.id) {
+                        const rankingsResponse = await getRankingByLeagueSeasonId(leagueSeasonResponse.id, {
+                            include: [
+                                {
+                                    relation: "club",
+                                    scope: {
+                                        fields: ["id", "name", "logo"],
+                                    },
                                 },
-                            },
-                        ],
-                        order: "position ASC",
-                    });
-                    setRankings(rankingsResponse);
-                } else {
-                    setRankings([]);
+                            ],
+                            order: "position ASC",
+                        });
+                        setRankings(rankingsResponse);
+                    } else {
+                        setRankings([]);
+                    }
                 }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -59,7 +68,9 @@ function Rankings() {
 
     return (
         <div className="w-full h-full">
-            {leagues && seasons && (
+            {loading ? (
+                <Loading />
+            ) : (
                 <>
                     <div className="bg-[#fbfbfc] border-b-2 border-gray-100">
                         <div className="pt-[30px] pb-[35px] w-full h-full max-w-[1400px] mx-auto">
@@ -95,7 +106,7 @@ function Rankings() {
                         </div>
                     </div>
                     <div className="py-[50px] w-full h-full max-w-[1200px] mx-auto flex flex-col justify-center">
-                        {rankings && rankings.length ? (
+                        {rankings && rankings.length > 0 ? (
                             <>
                                 <div className="flex justify-center border-x-2 border-t-2 py-3 bg-[#eaeaea]">
                                     <span className="text-lg font-bold">RANKINGS</span>

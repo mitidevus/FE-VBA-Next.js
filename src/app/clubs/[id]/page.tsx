@@ -1,7 +1,6 @@
 import { getClubById } from "@/app/api/club";
 import { Club } from "@/models/club";
 import Image from "next/image";
-import { Suspense } from "react";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { FaGlobeAsia } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";

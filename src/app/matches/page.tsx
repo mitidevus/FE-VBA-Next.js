@@ -1,16 +1,17 @@
 "use client";
 
+import { League } from "@/models/league";
 import { Match } from "@/models/match";
+import { Season } from "@/models/season";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getMatchByLeagueSeasonId } from "../api/match";
-import { getLeagueSeasonByLeagueIdSeasonId } from "../api/league-season";
-import { League } from "@/models/league";
-import { Season } from "@/models/season";
+import { Suspense, useEffect, useState } from "react";
 import { getAllLeagues } from "../api/league";
+import { getLeagueSeasonByLeagueIdSeasonId } from "../api/league-season";
+import { getMatchByLeagueSeasonId } from "../api/match";
 import { getAllSeasons } from "../api/season";
+import Loading from "../loading";
 
 function Matches() {
     const [leagues, setLeagues] = useState<League[]>([]);
@@ -18,43 +19,52 @@ function Matches() {
     const [matches, setMatches] = useState<Match[]>([]);
     const [selectedLeague, setSelectedLeague] = useState<number>(0);
     const [selectedSeason, setSelectedSeason] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
-            setLeagues(leaguesResponse);
-            setSeasons(seasonsResponse);
+            try {
+                setLoading(true);
 
-            if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
-                setSelectedLeague(leaguesResponse[0].id);
-                setSelectedSeason(seasonsResponse[0].id);
+                const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
+                setLeagues(leaguesResponse);
+                setSeasons(seasonsResponse);
 
-                const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(
-                    leaguesResponse[0].id,
-                    seasonsResponse[0].id
-                );
+                if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
+                    setSelectedLeague(leaguesResponse[0].id);
+                    setSelectedSeason(seasonsResponse[0].id);
 
-                if (leagueSeasonResponse && leagueSeasonResponse.id) {
-                    const matchesResponse = await getMatchByLeagueSeasonId(leagueSeasonResponse.id, {
-                        include: [
-                            {
-                                relation: "homeClub",
-                            },
-                            {
-                                relation: "awayClub",
-                            },
-                            {
-                                relation: "stadium",
-                            },
-                        ],
-                        order: "date DESC",
-                    });
-                    setMatches(matchesResponse);
-                } else {
-                    setMatches([]);
+                    const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(
+                        leaguesResponse[0].id,
+                        seasonsResponse[0].id
+                    );
+
+                    if (leagueSeasonResponse && leagueSeasonResponse.id) {
+                        const matchesResponse = await getMatchByLeagueSeasonId(leagueSeasonResponse.id, {
+                            include: [
+                                {
+                                    relation: "homeClub",
+                                },
+                                {
+                                    relation: "awayClub",
+                                },
+                                {
+                                    relation: "stadium",
+                                },
+                            ],
+                            order: "date DESC",
+                        });
+                        setMatches(matchesResponse);
+                    } else {
+                        setMatches([]);
+                    }
                 }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -62,7 +72,9 @@ function Matches() {
 
     return (
         <div className="w-full h-full">
-            {leagues && seasons && (
+            {loading ? (
+                <Loading />
+            ) : (
                 <>
                     <div className="bg-[#fbfbfc] border-b-2 border-gray-100">
                         <div className="pt-[30px] pb-[35px] w-full h-full max-w-[1400px] mx-auto">

@@ -11,39 +11,52 @@ import { getAllLeagues } from "../../../api/league";
 import { getLeagueSeasonByLeagueIdSeasonId } from "../../../api/league-season";
 import { getRankingByLeagueSeasonId } from "../../../api/ranking";
 import { getAllSeasons } from "../../../api/season";
+import Loading from "@/app/loading";
 
 function Rankings({ params }: { params: { leagueId: number; seasonId: number } }) {
     const [leagues, setLeagues] = useState<League[]>([]);
     const [seasons, setSeasons] = useState<Season[]>([]);
     const [rankings, setRankings] = useState<Ranking[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
-            setLeagues(leaguesResponse);
-            setSeasons(seasonsResponse);
+            try {
+                setLoading(true);
 
-            if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
-                const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(params.leagueId, params.seasonId);
+                const [leaguesResponse, seasonsResponse] = await Promise.all([getAllLeagues(), getAllSeasons()]);
+                setLeagues(leaguesResponse);
+                setSeasons(seasonsResponse);
 
-                if (leagueSeasonResponse && leagueSeasonResponse.id) {
-                    const rankingsResponse = await getRankingByLeagueSeasonId(leagueSeasonResponse.id, {
-                        include: [
-                            {
-                                relation: "club",
-                                scope: {
-                                    fields: ["id", "name", "logo"],
+                if (leaguesResponse.length > 0 && seasonsResponse.length > 0) {
+                    const leagueSeasonResponse = await getLeagueSeasonByLeagueIdSeasonId(
+                        params.leagueId,
+                        params.seasonId
+                    );
+
+                    if (leagueSeasonResponse && leagueSeasonResponse.id) {
+                        const rankingsResponse = await getRankingByLeagueSeasonId(leagueSeasonResponse.id, {
+                            include: [
+                                {
+                                    relation: "club",
+                                    scope: {
+                                        fields: ["id", "name", "logo"],
+                                    },
                                 },
-                            },
-                        ],
-                        order: "position ASC",
-                    });
-                    setRankings(rankingsResponse);
-                } else {
-                    setRankings([]);
+                            ],
+                            order: "position ASC",
+                        });
+                        setRankings(rankingsResponse);
+                    } else {
+                        setRankings([]);
+                    }
                 }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -51,7 +64,9 @@ function Rankings({ params }: { params: { leagueId: number; seasonId: number } }
 
     return (
         <div className="w-full h-full">
-            {leagues && seasons && (
+            {loading ? (
+                <Loading />
+            ) : (
                 <>
                     <div className="bg-[#fbfbfc] border-b-2 border-gray-100">
                         <div className="pt-[30px] pb-[35px] w-full h-full max-w-[1400px] mx-auto">
